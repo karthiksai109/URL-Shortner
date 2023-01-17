@@ -12,6 +12,6 @@ mongoose.connect('mongodb+srv://nishant55:1234@nishant99.et97kst.mongodb.net/gro
 .catch(err=>console.log(err))
 app.use('/',route)
 app.listen(process.env.PORT || 3000,function(){
-    console.log("connected to port 3000")
+    console.log(`connected to port ${process.env.PORT || 3000}`)
 } )
 
