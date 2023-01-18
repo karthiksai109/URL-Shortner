@@ -42,7 +42,7 @@ if(!req.body.longUrl){
     if (!regex.test(longUrl.trim())) {
       return res
         .status(400)
-        .send({ status: false, message: "please enter validUrl -1" });
+        .send({ status: false, message: "please enter validUrl" });
     }
 
     let codeUrl = await urlModel.findOne({ longUrl: longUrl.trim() }).select({_id:0,urlCode:1,longUrl:1,shortUrl:1});
