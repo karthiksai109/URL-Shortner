@@ -2,16 +2,26 @@ const urlModel = require("../Models/urlModel");
 const shortId = require("shortid");
 const validator = require("validator");
 const Base_Url = "http://localhost:3000/";
+
+
+
+
+const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
 //--------------------------------CreateUrl------------------------------------------------//
 const createUrl = async function (req, res) {
   try {
-    let data = {};
+    let data = req.body
     if (Object.keys(req.body).length == 0) {
       return res
         .status(400)
         .send({ status: false, message: "please enter longUrl" });
     }
+if(!req.body.longUrl){
+  return res
+        .status(400)
+        .send({ status: false, message: "you entered wrong key" });
 
+}
     if (Object.keys(req.body).length >1) {
       return res
         .status(400)
@@ -28,6 +38,11 @@ const createUrl = async function (req, res) {
       return res
         .status(400)
         .send({ status: false, message: "please enter validUrl" });
+    }
+    if (!regex.test(longUrl)) {
+      return res
+        .status(400)
+        .send({ status: false, message: "please enter validUrl -1" });
     }
 
     let codeUrl = await urlModel.findOne({ longUrl: longUrl }).select({_id:0,urlCode:1,longUrl:1,shortUrl:1});
