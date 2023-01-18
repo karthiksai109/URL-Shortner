@@ -10,7 +10,7 @@ const regex = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[
 //--------------------------------CreateUrl------------------------------------------------//
 const createUrl = async function (req, res) {
   try {
-    let data = req.body
+    let data = {}
     if (Object.keys(req.body).length == 0) {
       return res
         .status(400)
@@ -34,18 +34,18 @@ if(!req.body.longUrl){
         .send({ status: false, message: "url cannot be empty" });
     }
 
-    if (!validator.isURL(longUrl)) {
+    if (!validator.isURL(longUrl.trim())) {
       return res
         .status(400)
         .send({ status: false, message: "please enter validUrl" });
     }
-    if (!regex.test(longUrl)) {
+    if (!regex.test(longUrl.trim())) {
       return res
         .status(400)
         .send({ status: false, message: "please enter validUrl -1" });
     }
 
-    let codeUrl = await urlModel.findOne({ longUrl: longUrl }).select({_id:0,urlCode:1,longUrl:1,shortUrl:1});
+    let codeUrl = await urlModel.findOne({ longUrl: longUrl.trim() }).select({_id:0,urlCode:1,longUrl:1,shortUrl:1});
     if (codeUrl) {
       return res
         .status(200)
@@ -55,7 +55,7 @@ if(!req.body.longUrl){
 
     let shortUrl = Base_Url + urlCode.toLowerCase();
     data["urlCode"] = urlCode.toLowerCase();
-    data["longUrl"] = longUrl;
+    data["longUrl"] = longUrl.trim();
     data["shortUrl"] = shortUrl;
     let createdUrl = await urlModel.create(data);
     res.status(201).send({ status:true,data: data });
