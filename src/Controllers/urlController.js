@@ -15,7 +15,6 @@ const redisClient = redis.createClient(
 redisClient.auth("3xDT5KJiF3JpqBKEbeIEE6luSo8TT681", function (err) {
   if (err) throw err;
 });
-
 redisClient.on("connect", async function () {
   console.log("Connected to Redis..");
 });
@@ -53,14 +52,10 @@ const createUrl = async function (req, res) {
 
     }
     if(typeof(req.body.longUrl)!="string" || req.body.longUrl.trim()==""){
-      
       return res
         .status(400)
         .send({ status: false, message: `longUrl cant be empty or a wrong data type  🤦‍♂️ `});
-
     }
-    
-
     let longUrl = req.body["longUrl"];
 
     if (!validator.isURL(longUrl.trim())) {
@@ -117,6 +112,8 @@ const getUrl = async function (req, res) {
         .send({ status: false, message: "plese enter valid url code" });
     }
    
+
+    
     let cachedURL=await GET_ASYNC(`${req.params.urlCode}`)
     if(cachedURL){
        let cacheLongUrl=JSON.parse(cachedURL)
